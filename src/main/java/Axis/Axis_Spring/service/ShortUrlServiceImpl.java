@@ -105,7 +105,8 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
     shortUrlDAO.saveShortUrl(shortUrlEntity);
 
-    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(originalUrl, orgUrl, shortUrl);
+
 
     // Cache Logic
     shortUrlRedisRepository.save(shortUrlResponseDto);

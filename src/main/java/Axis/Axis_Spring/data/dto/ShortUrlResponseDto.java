@@ -23,7 +23,20 @@ public class ShortUrlResponseDto implements Serializable{
     @Id
     private String originalUrl;  // 고유 식별자 필드를 지정합니다.
     private String orgUrl;
-  
     private String shortUrl;
+
+    public ShortUrlResponseDto( String orgUrl, String shortUrl) {
+       
+        this.orgUrl = orgUrl;
+        this.shortUrl = shortUrl;
+    }
+   
+    public ShortUrlResponseDto(String originalUrl, String orgUrl, String shortUrl) {
+        this.originalUrl = originalUrl;
+        this.orgUrl = orgUrl;
+        this.shortUrl = shortUrl;
+    }
+    
+
 
 }
