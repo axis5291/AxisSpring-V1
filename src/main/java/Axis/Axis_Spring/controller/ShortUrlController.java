@@ -21,8 +21,8 @@ import Axis.Axis_Spring.service.ShortUrlService;
 public class ShortUrlController {
     private final Logger LOGGER = LoggerFactory.getLogger(ShortUrlController.class);
 
-    private String CLIENT_ID="ZJtn8I8tSMNBtlUhuF9l4gPmSt5cEbvEaTDREJq31PQ";
-    private String CLIENT_SECRET="tWXd8DA35z/XD28NuFNrvNRY4xJTU+v0";
+   
+    private final String ACCESS_TOKEN="67335b8ac21db31594d4ec284e2ca620fe435600";
 
     ShortUrlService shortUrlService;
 
@@ -33,18 +33,17 @@ public class ShortUrlController {
 
   @PostMapping()
   public ShortUrlResponseDto generateShortUrl(@RequestParam String originalUrl) {
+    System.out.println("입력하신 Url = " + originalUrl);
     LOGGER.info(
-        "[generateShortUrl] perform API. CLIENT_ID : {}, CLIENT_SECRET : {}",
-        CLIENT_ID,
-        CLIENT_SECRET);
+        "[generateShortUrl] perform  ACCESS_TOKEN : {}, originalUrl : {}", ACCESS_TOKEN, originalUrl);
 
-    return shortUrlService.generateShortUrl(CLIENT_ID, CLIENT_SECRET, originalUrl);
+    return shortUrlService.generateShortUrl(ACCESS_TOKEN, originalUrl);
   }
 
   @GetMapping()
   public ShortUrlResponseDto getShortUrl(@RequestParam  String originalUrl) {
     long startTime = System.currentTimeMillis();
-    ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(CLIENT_ID, CLIENT_SECRET, originalUrl);
+    ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
     long endTime = System.currentTimeMillis();
 
     LOGGER.info("[getShortUrl] response Time : {}ms", (endTime - startTime));

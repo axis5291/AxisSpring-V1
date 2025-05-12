@@ -17,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import Axis.Axis_Spring.data.dao.ShortUrlDAO;
-import Axis.Axis_Spring.data.dto.NaverUriDto;
+import Axis.Axis_Spring.data.dto.BitlyUriDto;
 import Axis.Axis_Spring.data.dto.ShortUrlResponseDto;
 import Axis.Axis_Spring.data.entity.ShortUrl;
 import Axis.Axis_Spring.data.repository.ShortUrlRedisRepository;
@@ -36,7 +36,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   }
 
   @Override
-  public ShortUrlResponseDto getShortUrl(String clientId, String clientSecret, String originalUrl) {
+  public ShortUrlResponseDto getShortUrl(String accessToken, String originalUrl) {
     LOGGER.info("[getShortUrl] request data : {}", originalUrl);
 
     // Cache Logic
@@ -55,7 +55,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
     if (getShortUrl == null) {
       LOGGER.info("[getShortUrl] No Entity in Database.");
-      ResponseEntity<NaverUriDto> responseEntity =requestShortUrl(clientId, clientSecret, originalUrl);
+      ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
       orgUrl = responseEntity.getBody().getResult().getOrgUrl();
       shortUrl = responseEntity.getBody().getResult().getUrl();
@@ -82,8 +82,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   }
 
   @Override
-  public ShortUrlResponseDto generateShortUrl(
-      String clientId, String clientSecret, String originalUrl) {
+  public ShortUrlResponseDto generateShortUrl(String accessToken, String originalUrl) {
 
     LOGGER.info("[generateShortUrl] request data : {}", originalUrl);
 
@@ -91,21 +90,21 @@ public class ShortUrlServiceImpl implements ShortUrlService{
       throw new RuntimeException();
     }
 
-    ResponseEntity<NaverUriDto> responseEntity =
-        requestShortUrl(clientId, clientSecret, originalUrl);
+    ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
-    String orgUrl = responseEntity.getBody().getResult().getOrgUrl();
-    String shortUrl = responseEntity.getBody().getResult().getUrl();
-    String hash = responseEntity.getBody().getResult().getHash();
+    String orgUrl = responseEntity.getBody().getLong_url();
+    String shortUrl = responseEntity.getBody().getLink();
+    String hash = responseEntity.getBody().getId(); // 예: bit.ly/abc123
+    
 
     ShortUrl shortUrlEntity = new ShortUrl();
-    shortUrlEntity.setOrgUrl(orgUrl);
     shortUrlEntity.setUrl(shortUrl);
+    shortUrlEntity.setOrgUrl(orgUrl); 
     shortUrlEntity.setHash(hash);
 
     shortUrlDAO.saveShortUrl(shortUrlEntity);
 
-    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(originalUrl, orgUrl, shortUrl);
+    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
 
 
     // Cache Logic
@@ -116,8 +115,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   }
 
   @Override
-  public ShortUrlResponseDto updateShortUrl(
-      String clientId, String clientSecret, String originalUrl) {
+  public ShortUrlResponseDto updateShortUrl(String accessToken, String originalUrl) {
     return null;
   }
 
@@ -142,31 +140,32 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     shortUrlDAO.deleteByOriginalUrl(url);
   }
 
-  private ResponseEntity<NaverUriDto> requestShortUrl(String clientId, String clientSecret, String originalUrl) {
+  private ResponseEntity<BitlyUriDto> requestShortUrl(String accessToken , String originalUrl) {
     LOGGER.info(
-        "[requestShortUrl] client ID : ***, client Secret : ***, original URL : {}", originalUrl);
+        "[requestShortUrl] accessToken:{}, original URL : {}", accessToken, originalUrl);
 
-    URI uri =
-        UriComponentsBuilder.fromUriString("https://openapi.naver.com")
-            .path("/v1/util/shorturl")
-            .queryParam("url", originalUrl)
+        URI uri =
+        UriComponentsBuilder.fromUriString("https://api-ssl.bitly.com/v4/shorten")
             .encode()
             .build()
             .toUri();
+    
 
     LOGGER.info("[requestShortUrl] set HTTP Request Header");
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(new MediaType[] {MediaType.APPLICATION_JSON}));
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("X-Naver-Client-Id", clientId);
-    headers.set("X-Naver-Client-Secret", clientSecret);
+    headers.add("Authorization", "Bearer " + accessToken);
+    headers.add("Content-Type", "application/json");
+    
+    String requestBody = String.format("{\"long_url\": \"%s\"}", originalUrl);
 
-    HttpEntity<String> entity = new HttpEntity<>("", headers);
+    HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
 
     RestTemplate restTemplate = new RestTemplate();
 
     LOGGER.info("[requestShortUrl] request by restTemplate");
-    ResponseEntity<NaverUriDto> responseEntity =restTemplate.exchange(uri, HttpMethod.GET, entity, NaverUriDto.class);
+    ResponseEntity<BitlyUriDto> responseEntity =restTemplate.exchange(uri, HttpMethod.POST, entity, BitlyUriDto.class);
 
     LOGGER.info("[requestShortUrl] request has been successfully complete.");
 
