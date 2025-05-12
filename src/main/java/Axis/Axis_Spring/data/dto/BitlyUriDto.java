@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,7 +13,17 @@ import lombok.ToString;
 @Builder
 public class BitlyUriDto {
 
-    private String id;
-    private String link;      // 단축된 URL
-    private String long_url;  // 원래 URL
+    private String message;
+    private String code;
+    private Result result; // result 객체 추가
+
+    // Result 내부 클래스 정의
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Result {
+        private String hash;
+        private String url;    // 단축된 URL
+        private String orgUrl; // 원래 URL
+    }
 }
