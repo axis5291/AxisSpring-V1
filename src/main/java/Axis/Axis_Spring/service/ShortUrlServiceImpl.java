@@ -19,13 +19,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 import Axis.Axis_Spring.data.dao.ShortUrlDAO;
 import Axis.Axis_Spring.data.dto.BitlyUriDto;
 import Axis.Axis_Spring.data.dto.ShortUrlResponseDto;
-import Axis.Axis_Spring.data.entity.ShortUrl;
+import Axis.Axis_Spring.data.entity.ShortUrlEntity;
 import Axis.Axis_Spring.data.repository.ShortUrlRedisRepository;
 
 @Service
 public class ShortUrlServiceImpl implements ShortUrlService{
 
+  
   private final Logger LOGGER = LoggerFactory.getLogger(ShortUrlServiceImpl.class);
+
   private final ShortUrlDAO shortUrlDAO;
   private final ShortUrlRedisRepository shortUrlRedisRepository;
 
@@ -33,6 +35,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   public ShortUrlServiceImpl(ShortUrlDAO shortUrlDAO, ShortUrlRedisRepository shortUrlRedisRepository){
     this.shortUrlDAO = shortUrlDAO;
     this.shortUrlRedisRepository = shortUrlRedisRepository;
+   
   }
 
   @Override
@@ -48,8 +51,9 @@ public class ShortUrlServiceImpl implements ShortUrlService{
       LOGGER.info("[getShortUrl] Cache Data does not existed.");
     }
 
-    ShortUrl getShortUrl = shortUrlDAO.getShortUrl(originalUrl);
+    ShortUrlEntity getShortUrl = shortUrlDAO.getShortUrl(originalUrl);
 
+    String id="";
     String orgUrl;
     String shortUrl;
 
@@ -57,23 +61,24 @@ public class ShortUrlServiceImpl implements ShortUrlService{
       LOGGER.info("[getShortUrl] No Entity in Database.");
       ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
-      orgUrl = responseEntity.getBody().getResult().getOrgUrl();
-      shortUrl = responseEntity.getBody().getResult().getUrl();
-      String hash = responseEntity.getBody().getResult().getHash();
+      orgUrl = responseEntity.getBody().getOrgUrl();
+      shortUrl = responseEntity.getBody().getShortUrl();
+      id = responseEntity.getBody().getId();
 
-      ShortUrl shortUrlEntity = new ShortUrl();
+      ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
+      shortUrlEntity.setId(id);
       shortUrlEntity.setOrgUrl(orgUrl);
-      shortUrlEntity.setUrl(shortUrl);
-      shortUrlEntity.setHash(hash);
+      shortUrlEntity.setShortUrl(shortUrl);
+     
 
       shortUrlDAO.saveShortUrl(shortUrlEntity);
 
     } else {
       orgUrl = getShortUrl.getOrgUrl();
-      shortUrl = getShortUrl.getUrl();
+      shortUrl = getShortUrl.getShortUrl();
     }
 
-    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(id, orgUrl, shortUrl);
 
     shortUrlRedisRepository.save(shortUrlResponseDto);
 
@@ -92,19 +97,21 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
     ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
-    String orgUrl = responseEntity.getBody().getLong_url();
-    String shortUrl = responseEntity.getBody().getLink();
-    String hash = responseEntity.getBody().getId(); // 예: bit.ly/abc123
+    String id = responseEntity.getBody().getId(); // 예: bit.ly/abc123
+    String orgUrl = responseEntity.getBody().getOrgUrl();
+    String shortUrl = responseEntity.getBody().getShortUrl();
+   
     
 
-    ShortUrl shortUrlEntity = new ShortUrl();
-    shortUrlEntity.setUrl(shortUrl);
+    ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
+    shortUrlEntity.setId(id);
     shortUrlEntity.setOrgUrl(orgUrl); 
-    shortUrlEntity.setHash(hash);
+    shortUrlEntity.setShortUrl(shortUrl);
+   
 
     shortUrlDAO.saveShortUrl(shortUrlEntity);
 
-    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+    ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(id, orgUrl, shortUrl);
 
 
     // Cache Logic
@@ -166,7 +173,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
     LOGGER.info("[requestShortUrl] request by restTemplate");
     ResponseEntity<BitlyUriDto> responseEntity =restTemplate.exchange(uri, HttpMethod.POST, entity, BitlyUriDto.class);
-
+    //이 uri 주소로 POST 방식의 HTTP 요청을 보내고, entity에 담긴 내용을 보낸 다음, 응답이 오면 그 응답을 BitlyUriDto 클래스 형태로 바꿔서 responseEntity에 담아줘.
     LOGGER.info("[requestShortUrl] request has been successfully complete.");
 
     return responseEntity;

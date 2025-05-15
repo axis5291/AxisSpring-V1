@@ -3,7 +3,7 @@ package Axis.Axis_Spring.data.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import Axis.Axis_Spring.data.entity.ShortUrl;
+import Axis.Axis_Spring.data.entity.ShortUrlEntity;
 import Axis.Axis_Spring.data.repository.ShortUrlRepository;
 
 @Repository
@@ -16,43 +16,43 @@ public class ShortUrlDaoImpl implements ShortUrlDAO{
   }
 
   @Override
-  public ShortUrl saveShortUrl(ShortUrl shortUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.save(shortUrl);
+  public ShortUrlEntity saveShortUrl(ShortUrlEntity shortUrlEntity) {
+    ShortUrlEntity foundShortUrl = shortUrlRepository.save(shortUrlEntity);
     return foundShortUrl;
   }
 
   @Override
-  public ShortUrl getShortUrl(String originalUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.findByOrgUrl(originalUrl);
+  public ShortUrlEntity getShortUrl(String originalUrl) {
+    ShortUrlEntity foundShortUrl = shortUrlRepository.findByOrgUrl(originalUrl);
     return foundShortUrl;
   }
 
   @Override
-  public ShortUrl getOriginalUrl(String shortUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.findByUrl(shortUrl);
+  public ShortUrlEntity getOriginalUrl(String shortUrl) {
+    ShortUrlEntity foundShortUrl = shortUrlRepository.findByShortUrl(shortUrl);
     return foundShortUrl;
   }
 
   @Override
-  public ShortUrl updateShortUrl(ShortUrl newShortUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.findByOrgUrl(newShortUrl.getOrgUrl());
+  public ShortUrlEntity updateShortUrl(ShortUrlEntity newShortUrl) {
+    ShortUrlEntity foundShortUrl = shortUrlRepository.findByOrgUrl(newShortUrl.getOrgUrl());
 
-    foundShortUrl.setUrl(newShortUrl.getUrl());
+    foundShortUrl.setOrgUrl(newShortUrl.getOrgUrl());
 
-    ShortUrl savedShortUrl = shortUrlRepository.save(foundShortUrl);
+    ShortUrlEntity savedShortUrl = shortUrlRepository.save(foundShortUrl);
 
     return savedShortUrl;
   }
 
   @Override
   public void deleteByShortUrl(String shortUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.findByUrl(shortUrl);
+    ShortUrlEntity foundShortUrl = shortUrlRepository.findByShortUrl(shortUrl);
     shortUrlRepository.delete(foundShortUrl);
   }
 
   @Override
   public void deleteByOriginalUrl(String originalUrl) {
-    ShortUrl foundShortUrl = shortUrlRepository.findByOrgUrl(originalUrl);
+    ShortUrlEntity foundShortUrl = shortUrlRepository.findByOrgUrl(originalUrl);
     shortUrlRepository.delete(foundShortUrl);
   }
 }

@@ -19,11 +19,10 @@ import lombok.ToString;
 @RedisHash(value = "shortUrl", timeToLive = 60)
 public class ShortUrlResponseDto implements Serializable {
 
-    public ShortUrlResponseDto(String orgUrl1, String shortUrl1) {
-    }
     private static final long serialVersionUID = -214490344996507077L;
 
     @Id
+    private String id;
     private String orgUrl;
     private String shortUrl;
 

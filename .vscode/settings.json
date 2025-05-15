@@ -3,5 +3,8 @@
     "java.configuration.updateBuildConfiguration": "interactive",
     "cSpell.words": [
         "Delombok"
-    ]
+    ],
+    
+  "java.compile.workspaceAnnotations": true,
+  "java.configuration.checkProjectSettingsExclusions": false
 }

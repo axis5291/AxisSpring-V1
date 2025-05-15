@@ -1,15 +1,15 @@
 package Axis.Axis_Spring.data.dao;
 
-import Axis.Axis_Spring.data.entity.ShortUrl;
+import Axis.Axis_Spring.data.entity.ShortUrlEntity;
 
 public interface ShortUrlDAO {
-    ShortUrl saveShortUrl(ShortUrl shortUrl);
+    ShortUrlEntity saveShortUrl(ShortUrlEntity shortUrl);
 
-    ShortUrl getShortUrl(String originalUrl);
+    ShortUrlEntity getShortUrl(String originalUrl);
   
-    ShortUrl getOriginalUrl(String shortUrl);
+    ShortUrlEntity getOriginalUrl(String shortUrl);
   
-    ShortUrl updateShortUrl(ShortUrl newShortUrl);
+    ShortUrlEntity updateShortUrl(ShortUrlEntity newShortUrl);
   
     void deleteByShortUrl(String shortUrl);
   
