@@ -40,18 +40,19 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
   @Override
   public ShortUrlResponseDto getShortUrl(String accessToken, String originalUrl) {
-    LOGGER.info("[getShortUrl] request data : {}", originalUrl);
+    LOGGER.info("서비스계층에서 전달받은 url= {}", originalUrl);
 
     // Cache Logic
     Optional<ShortUrlResponseDto> foundResponseDto = shortUrlRedisRepository.findById(originalUrl);
     if (foundResponseDto.isPresent()) {
-      LOGGER.info("DB에 데이터가 존재합니다.");
+      LOGGER.info("DRedisRepository에 데이터가 존재합니다.");
       return foundResponseDto.get();
     } else {
-      LOGGER.info("DB에 데이터가 존재하지 않습니다.");
+      LOGGER.info("RedisRepository에 데이터가 존재하지 않습니다.");
     }
 
     ShortUrlEntity getShortUrl = shortUrlDAO.getShortUrl(originalUrl);
+    LOGGER.info("DB에서 엔티티를 꺼낸 단축 URL={}", getShortUrl);
 
     String id="";
     String orgUrl;

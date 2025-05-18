@@ -22,7 +22,7 @@ public class ShortUrlController {
     private final Logger LOGGER = LoggerFactory.getLogger(ShortUrlController.class);
 
    
-    private final String ACCESS_TOKEN="67335b8ac21db31594d4ec284e2ca620fe435600";
+    private final String ACCESS_TOKEN="ab5a025c5d780d8c09a078f4e1eb3d9222e784f9";
 
     ShortUrlService shortUrlService;
 
@@ -45,6 +45,7 @@ public class ShortUrlController {
 
   @GetMapping()
   public ShortUrlResponseDto getShortUrl(@RequestParam  String originalUrl) {
+    LOGGER.info("조회하신 Url = " + originalUrl);
     long startTime = System.currentTimeMillis();
     ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
     long endTime = System.currentTimeMillis();

@@ -1,11 +1,9 @@
 package Axis.Axis_Spring.data.dao;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import Axis.Axis_Spring.data.entity.ShortUrlEntity;
 import Axis.Axis_Spring.data.repository.ShortUrlRepository;
-
 @Repository
 public class ShortUrlDaoImpl implements ShortUrlDAO{
     private final ShortUrlRepository shortUrlRepository;
@@ -23,7 +21,9 @@ public class ShortUrlDaoImpl implements ShortUrlDAO{
 
   @Override
   public ShortUrlEntity getShortUrl(String originalUrl) {
+    System.out.println("Dao걔층에서 전달받은 url= " + originalUrl);
     ShortUrlEntity foundShortUrl = shortUrlRepository.findByOrgUrl(originalUrl);
+    System.out.println("Dao걔층에서 전달받은 ShortUrlEntity= " + foundShortUrl);
     return foundShortUrl;
   }
 
