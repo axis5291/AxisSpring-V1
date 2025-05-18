@@ -34,10 +34,13 @@ public class ShortUrlController {
   @PostMapping()
   public ShortUrlResponseDto generateShortUrl(@RequestParam String originalUrl) {
     System.out.println("입력하신 Url = " + originalUrl);
-    LOGGER.info(
-        "[generateShortUrl] perform  ACCESS_TOKEN : {}, originalUrl : {}", ACCESS_TOKEN, originalUrl);
+    LOGGER.info("post방식으로 생성한 토큰 : {}, originalUrl : {}", ACCESS_TOKEN, originalUrl);
 
-    return shortUrlService.generateShortUrl(ACCESS_TOKEN, originalUrl);
+    ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
+    LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>오류 테스트 코드" );
+    return shortUrlResponseDto;
+    
+   
   }
 
   @GetMapping()
@@ -46,7 +49,7 @@ public class ShortUrlController {
     ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
     long endTime = System.currentTimeMillis();
 
-    LOGGER.info("[getShortUrl] response Time : {}ms", (endTime - startTime));
+    LOGGER.info("[조회응답시간 : {}ms", (endTime - startTime));
 
     return shortUrlResponseDto;
   }

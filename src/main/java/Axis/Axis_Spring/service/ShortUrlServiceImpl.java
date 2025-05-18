@@ -45,10 +45,10 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     // Cache Logic
     Optional<ShortUrlResponseDto> foundResponseDto = shortUrlRedisRepository.findById(originalUrl);
     if (foundResponseDto.isPresent()) {
-      LOGGER.info("[getShortUrl] Cache Data existed.");
+      LOGGER.info("DB에 데이터가 존재합니다.");
       return foundResponseDto.get();
     } else {
-      LOGGER.info("[getShortUrl] Cache Data does not existed.");
+      LOGGER.info("DB에 데이터가 존재하지 않습니다.");
     }
 
     ShortUrlEntity getShortUrl = shortUrlDAO.getShortUrl(originalUrl);
@@ -89,13 +89,14 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   @Override
   public ShortUrlResponseDto generateShortUrl(String accessToken, String originalUrl) {
 
-    LOGGER.info("[generateShortUrl] request data : {}", originalUrl);
+    LOGGER.info("서비스계층에서 전달된 오리지널 url: {}", originalUrl);
 
-    if (originalUrl.contains("me2.do")) {
+    if (originalUrl.contains("bit.ly")) {
       throw new RuntimeException();
     }
-
+ 
     ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
+
 
     String id = responseEntity.getBody().getId(); // 예: bit.ly/abc123
     String orgUrl = responseEntity.getBody().getOrgUrl();
@@ -117,7 +118,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     // Cache Logic
     shortUrlRedisRepository.save(shortUrlResponseDto);
 
-    LOGGER.info("[generateShortUrl] Response DTO : {}", shortUrlResponseDto);
+    LOGGER.info("서비스 계층애서 생성한 DTO : {}", shortUrlResponseDto);
     return shortUrlResponseDto;
   }
 
@@ -148,16 +149,13 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   }
 
   private ResponseEntity<BitlyUriDto> requestShortUrl(String accessToken , String originalUrl) {
-    LOGGER.info(
-        "[requestShortUrl] accessToken:{}, original URL : {}", accessToken, originalUrl);
+    LOGGER.info("[requestShortUrl] accessToken:{}, original URL : {}", accessToken, originalUrl);
 
-        URI uri =
-        UriComponentsBuilder.fromUriString("https://api-ssl.bitly.com/v4/shorten")
-            .encode()
-            .build()
-            .toUri();
+        URI uri = UriComponentsBuilder.fromUriString("https://api-ssl.bitly.com/v4/shorten")
+                  .encode()
+                  .build()
+                  .toUri();
     
-
     LOGGER.info("[requestShortUrl] set HTTP Request Header");
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Arrays.asList(new MediaType[] {MediaType.APPLICATION_JSON}));
@@ -166,9 +164,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     headers.add("Content-Type", "application/json");
     
     String requestBody = String.format("{\"long_url\": \"%s\"}", originalUrl);
-
     HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
-
     RestTemplate restTemplate = new RestTemplate();
 
     LOGGER.info("[requestShortUrl] request by restTemplate");
