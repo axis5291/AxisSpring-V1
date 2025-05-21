@@ -9,14 +9,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
-@Data
+@Data   // Lombok annotation to generate getters, setters, equals, hashCode, and toString methods
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-@RedisHash(value = "shortUrl", timeToLive = 60)
+@RedisHash(value = "shortUrl", timeToLive = 60)  // 캐시 데이터 저장소로 Redis 사용하고 60초 후 만료되어 다시 디비에 조회해야 함
 public class ShortUrlResponseDto implements Serializable {
 
     private static final long serialVersionUID = -214490344996507077L;
@@ -26,5 +24,4 @@ public class ShortUrlResponseDto implements Serializable {
     private String orgUrl;
     private String shortUrl;
 
- 
 }

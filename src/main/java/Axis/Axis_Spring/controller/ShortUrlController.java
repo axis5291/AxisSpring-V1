@@ -19,16 +19,25 @@ import Axis.Axis_Spring.service.ShortUrlService;
 @RestController
 @RequestMapping("/api/v1/short-url")
 public class ShortUrlController {
+  
     private final Logger LOGGER = LoggerFactory.getLogger(ShortUrlController.class);
-
-   
     private final String ACCESS_TOKEN="ab5a025c5d780d8c09a078f4e1eb3d9222e784f9";
-
     ShortUrlService shortUrlService;
 
   @Autowired
   public ShortUrlController(ShortUrlService shortUrlService) {
     this.shortUrlService = shortUrlService;
+  }
+
+  @GetMapping()
+  public ShortUrlResponseDto getShortUrl(@RequestParam  String originalUrl) {
+    LOGGER.info("조회하실 Url = " + originalUrl);
+    long startTime = System.currentTimeMillis();
+    ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
+    long endTime = System.currentTimeMillis();
+
+    LOGGER.info("[조회응답시간 : {}ms", (endTime - startTime));
+    return shortUrlResponseDto;
   }
 
   @PostMapping()
@@ -39,20 +48,7 @@ public class ShortUrlController {
     ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
     LOGGER.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>오류 테스트 코드" );
     return shortUrlResponseDto;
-    
-   
-  }
-
-  @GetMapping()
-  public ShortUrlResponseDto getShortUrl(@RequestParam  String originalUrl) {
-    LOGGER.info("조회하신 Url = " + originalUrl);
-    long startTime = System.currentTimeMillis();
-    ShortUrlResponseDto shortUrlResponseDto = shortUrlService.getShortUrl(ACCESS_TOKEN, originalUrl);
-    long endTime = System.currentTimeMillis();
-
-    LOGGER.info("[조회응답시간 : {}ms", (endTime - startTime));
-
-    return shortUrlResponseDto;
+       
   }
 
   @PutMapping("/")
@@ -70,6 +66,5 @@ public class ShortUrlController {
 
     return ResponseEntity.status(HttpStatus.OK).body("정상적으로 삭제되었습니다.");
   }
-
 
 }

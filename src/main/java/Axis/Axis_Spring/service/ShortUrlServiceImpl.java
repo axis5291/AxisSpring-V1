@@ -35,17 +35,15 @@ public class ShortUrlServiceImpl implements ShortUrlService{
   public ShortUrlServiceImpl(ShortUrlDAO shortUrlDAO, ShortUrlRedisRepository shortUrlRedisRepository){
     this.shortUrlDAO = shortUrlDAO;
     this.shortUrlRedisRepository = shortUrlRedisRepository;
-   
   }
 
   @Override
   public ShortUrlResponseDto getShortUrl(String accessToken, String originalUrl) {
     LOGGER.info("서비스계층에서 전달받은 url= {}", originalUrl);
 
-    // Cache Logic
-    Optional<ShortUrlResponseDto> foundResponseDto = shortUrlRedisRepository.findById(originalUrl);
+    Optional<ShortUrlResponseDto> foundResponseDto = shortUrlRedisRepository.findById(originalUrl);  // Cache Logic
     if (foundResponseDto.isPresent()) {
-      LOGGER.info("DRedisRepository에 데이터가 존재합니다.");
+      LOGGER.info("RedisRepository에 데이터가 존재합니다.");
       return foundResponseDto.get();
     } else {
       LOGGER.info("RedisRepository에 데이터가 존재하지 않습니다.");
@@ -59,7 +57,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     String shortUrl;
 
     if (getShortUrl == null) {
-      LOGGER.info("[getShortUrl] No Entity in Database.");
+      LOGGER.info("DB에 데이터가 존재하지 않습니다.");
       ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
       orgUrl = responseEntity.getBody().getOrgUrl();
@@ -98,23 +96,18 @@ public class ShortUrlServiceImpl implements ShortUrlService{
  
     ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
-
     String id = responseEntity.getBody().getId(); // 예: bit.ly/abc123
     String orgUrl = responseEntity.getBody().getOrgUrl();
     String shortUrl = responseEntity.getBody().getShortUrl();
-   
-    
 
     ShortUrlEntity shortUrlEntity = new ShortUrlEntity();
     shortUrlEntity.setId(id);
     shortUrlEntity.setOrgUrl(orgUrl); 
     shortUrlEntity.setShortUrl(shortUrl);
    
-
     shortUrlDAO.saveShortUrl(shortUrlEntity);
 
     ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(id, orgUrl, shortUrl);
-
 
     // Cache Logic
     shortUrlRedisRepository.save(shortUrlResponseDto);
@@ -149,7 +142,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
     shortUrlDAO.deleteByOriginalUrl(url);
   }
 
-  private ResponseEntity<BitlyUriDto> requestShortUrl(String accessToken , String originalUrl) {
+  private ResponseEntity<BitlyUriDto> requestShortUrl(String accessToken , String originalUrl) {//  Bitly API에 요청을 하여 엔티티에 담는다.
     LOGGER.info("[requestShortUrl] accessToken:{}, original URL : {}", accessToken, originalUrl);
 
         URI uri = UriComponentsBuilder.fromUriString("https://api-ssl.bitly.com/v4/shorten")
