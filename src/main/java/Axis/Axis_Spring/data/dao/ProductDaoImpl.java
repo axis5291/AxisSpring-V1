@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import Axis.Axis_Spring.data.entity.ProductEntity;
 import Axis.Axis_Spring.data.repository.ProductRepository;
@@ -37,7 +36,6 @@ public  class ProductDaoImpl implements ProductDao {
     public List<ProductEntity> getAllProduct() {
        return productRepository.findAll();  //findAll()은 List를 반환한다.
     }
-
 
     @Override
     public ProductEntity deleteProduct(String productId) {

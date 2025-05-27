@@ -96,6 +96,8 @@ public class ShortUrlServiceImpl implements ShortUrlService{
  
     ResponseEntity<BitlyUriDto> responseEntity =requestShortUrl(accessToken, originalUrl);
 
+    LOGGER.info("[generateShortUrl] Bitly API로부터 받은 응답: {}", responseEntity);
+
     String id = responseEntity.getBody().getId(); // 예: bit.ly/abc123
     String orgUrl = responseEntity.getBody().getOrgUrl();
     String shortUrl = responseEntity.getBody().getShortUrl();
@@ -123,7 +125,7 @@ public class ShortUrlServiceImpl implements ShortUrlService{
 
   @Override
   public void deleteShortUrl(String url) {
-    if (url.contains("me2.do")) {
+    if (url.contains("bit.ly")) {
       LOGGER.info("[deleteShortUrl] Request Url is 'ShortUrl'.");
       deleteByShortUrl(url);
     } else {
