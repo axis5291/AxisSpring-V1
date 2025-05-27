@@ -17,36 +17,36 @@ public class CustomListener {
 
     @PostLoad
     public void postLoad(ListenerEntity entity) {
-        LOGGER.info("[postLoad] called!!");
+        LOGGER.info("엔티티가 로드되었습니다");
     }
 
     @PrePersist
     public void prePersist(ListenerEntity entity) {
-        LOGGER.info("[prePersist] called!!");
+        LOGGER.info("새로운 엔티티가 저장되기 전입니다.");
     }
 
     @PostPersist
     public void postPersist(ListenerEntity entity) {
-        LOGGER.info("[postPersist] called!!");
+        LOGGER.info("새로운 엔티티가 저장되었습니다.");
     }
 
     @PreUpdate
     public void preUpdate(ListenerEntity entity) {
-        LOGGER.info("[preUpdate] called!!");
+        LOGGER.info("업데이트가 일어나기 전입니다.");
     }
 
     @PostUpdate
     public void postUpdate(ListenerEntity entity) {
-        LOGGER.info("[postUpdate] called!!");
+        LOGGER.info("업데이트가 완료되었습니다.");
     }
 
     @PreRemove
     public void preRemove(ListenerEntity entity) {
-        LOGGER.info("[preRemove] called!!");
+        LOGGER.info("삭제가 일어나기 전입니다.");
     }
 
     @PostRemove
     public void postRemove(ListenerEntity entity) {
-        LOGGER.info("[postRemove] called!!");
+        LOGGER.info("삭제가 완료되었습니다.");
     }
 }

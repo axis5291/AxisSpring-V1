@@ -18,7 +18,7 @@ public class ListenerServiceImpl implements ListenerService {
 
     @Override
     public ListenerEntity getEntity(Long id) {
-        return listenerRepository.findById(id).get();
+        return listenerRepository.findById(id).get();  // findById() 메서드는 Optional을 반환하므로, get()을 사용하여 실제 엔티티를 가져옵니다.
     }
 
     @Override
@@ -28,7 +28,7 @@ public class ListenerServiceImpl implements ListenerService {
 
     @Override
     public void updateEntity(ListenerEntity listener) {
-        ListenerEntity foundListener = listenerRepository.findById(listener.getId()).get();
+        ListenerEntity foundListener = listenerRepository.findById(listener.getId()).get();   //listener.getId())는 ID 값을 꺼내는 부분
         foundListener.setName(listener.getName());
 
         listenerRepository.save(foundListener);

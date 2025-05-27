@@ -19,7 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Table(name = "listener")
-@EntityListeners(CustomListener.class)
+@EntityListeners(CustomListener.class)  //엔티티의 변화를 감지하는 대상이라는 표시와 로그를 CustomListener 클래스에서 처리한다라고 지정하는 어노테이션
 public class ListenerEntity {
 
   @Id
