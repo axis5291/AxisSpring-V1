@@ -3,6 +3,7 @@ package Axis.Axis_Spring.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import Axis.Axis_Spring.data.dto.ListenerDto;
 import Axis.Axis_Spring.data.entity.ListenerEntity;
 import Axis.Axis_Spring.data.repository.ListenerRepository;
 
@@ -17,13 +18,21 @@ public class ListenerServiceImpl implements ListenerService {
     }
 
     @Override
-    public ListenerEntity getEntity(Long id) {
-        return listenerRepository.findById(id).get();  // findById() 메서드는 Optional을 반환하므로, get()을 사용하여 실제 엔티티를 가져옵니다.
+    public ListenerDto getListenerDto(Long id) {
+        ListenerEntity listenerEntity= listenerRepository.findById(id).get();  // findById() 메서드는 Optional을 반환하므로, get()을 사용하여 실제 엔티티를 가져옵니다.
+        ListenerDto listenerDto = ListenerDto.builder()
+                                    .id(listenerEntity.getId())
+                                    .name(listenerEntity.getName())
+                                    .build();
+        return listenerDto;
     }
 
     @Override
-    public void saveEntity(ListenerEntity listener) {
-        listenerRepository.save(listener);
+    public void saveListenerDto(ListenerDto listenerDto) {
+        ListenerEntity listenerEntity = ListenerEntity.builder()
+                                    .name(listenerDto.getName())
+                                    .build();
+        listenerRepository.save(listenerEntity);
     }
 
     @Override

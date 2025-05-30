@@ -1,5 +1,6 @@
 package Axis.Axis_Spring.data.entity;
 
+import Axis.Axis_Spring.data.dto.ListenerDto;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,12 @@ public class ListenerEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String name;
+
+      public ListenerDto toDto(){
+        return ListenerDto.builder()
+                .id(id)
+                .name(name)
+                .build();
+    }
 }
