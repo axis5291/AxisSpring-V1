@@ -1,5 +1,7 @@
 package Axis.Axis_Spring.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +30,16 @@ public class ListenerServiceImpl implements ListenerService {
     }
 
     @Override
+     public List<ListenerDto> getListenerDtoAll(){
+        return listenerRepository.findAll().stream()
+                .map(listenerEntity -> ListenerDto.builder()
+                        .id(listenerEntity.getId())
+                        .name(listenerEntity.getName())
+                        .build())
+                .toList();  // List<ListenerDto>로 변환
+     }
+
+    @Override
     public void saveListenerDto(ListenerDto listenerDto) {
         ListenerEntity listenerEntity = ListenerEntity.builder()
                                     .name(listenerDto.getName())
@@ -36,15 +48,15 @@ public class ListenerServiceImpl implements ListenerService {
     }
 
     @Override
-    public void updateEntity(ListenerEntity listener) {
-        ListenerEntity foundListener = listenerRepository.findById(listener.getId()).get();   //listener.getId())는 ID 값을 꺼내는 부분
-        foundListener.setName(listener.getName());
-
-        listenerRepository.save(foundListener);
+    public void updateListenerDto(ListenerDto listenerDto) {
+        ListenerEntity listenerEntity = listenerRepository.findById(listenerDto.getId()).get();   //listener.getId())는 ID 값을 꺼내는 부분
+        listenerEntity.setName(listenerDto.getName());
+        listenerRepository.save(listenerEntity);
     }
 
     @Override
-    public void removeEntity(ListenerEntity listener) {
-        listenerRepository.delete(listener);
+    public void removeListenerDto(ListenerDto listenerDto) {
+        ListenerEntity listenerEntity = listenerRepository.findById(listenerDto.getId()).get();   //listener.getId())는 ID 값을 꺼내는 부분
+        listenerRepository.delete(listenerEntity);
     }
 }

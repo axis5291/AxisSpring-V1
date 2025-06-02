@@ -17,7 +17,8 @@ public class CustomListener {
 
     @PostLoad
     public void postLoad(ListenerEntity entity) {
-        LOGGER.info("엔티티가 로드되었습니다");
+        Long id= entity.getId(); // 엔티티를 DTO로 변환하는 메서드 호출
+        LOGGER.info(id+"번 id 엔티티가 로드되었습니다");
     }
 
     @PrePersist
@@ -25,9 +26,10 @@ public class CustomListener {
         LOGGER.info("새로운 엔티티가 저장되기 전입니다.");
     }
 
-    @PostPersist
+    @PostPersist  
     public void postPersist(ListenerEntity entity) {
-        LOGGER.info("새로운 엔티티가 저장되었습니다.");
+        Long id= entity.getId(); // 엔티티를 DTO로 변환하는 메서드 호출
+        LOGGER.info(id+"번 id 새로운 엔티티가 저장되었습니다.");
     }
 
     @PreUpdate
@@ -36,8 +38,9 @@ public class CustomListener {
     }
 
     @PostUpdate
-    public void postUpdate(ListenerEntity entity) {
-        LOGGER.info("업데이트가 완료되었습니다.");
+    public void postUpdate(ListenerEntity entity) {   
+        Long id= entity.getId(); // 엔티티를 DTO로 변환하는 메서드 호출
+        LOGGER.info(id+"번 id 업데이트가 완료되었습니다.");
     }
 
     @PreRemove
@@ -46,7 +49,7 @@ public class CustomListener {
     }
 
     @PostRemove
-    public void postRemove(ListenerEntity entity) {
-        LOGGER.info("삭제가 완료되었습니다.");
+    public void postRemove(ListenerEntity entity) {    Long id= entity.getId(); // 엔티티를 DTO로 변환하는 메서드 호출
+        LOGGER.info(id+"번 id 삭제가 완료되었습니다.");
     }
 }

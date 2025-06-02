@@ -50,12 +50,10 @@ public class ProductController {
             productDto.getProductStock(),
             (System.currentTimeMillis() - startTime)  //수횅시간을 측정하기 위해서 시작시간과 끝시간을 빼준다.
          );
-       
-            return productDto; 
-            
+        return productDto; 
     }
 
-    @GetMapping(value = "/productAll") //*내가 만든거 http://localhost:8080/api/v1/product-api/productAll  
+   @GetMapping(value = "/productAll") //*내가 만든거 http://localhost:8080/api/v1/product-api/productAll  
     public ResponseEntity<List<ProductDto>> getProductAll(){
         return ResponseEntity.status(HttpStatus.OK).body(productService.getProductAll());
     }
