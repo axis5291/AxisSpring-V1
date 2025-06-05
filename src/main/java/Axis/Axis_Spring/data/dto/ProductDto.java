@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 //상품의 정보를 등록하거나 빼거나 수정, 조회 작업을 할려고 만들었다. 데이터를 넘길려고 만듬
 @Data  //lombok에서 제공하는 어노테이션으로 getter, setter, equals, hashCode, toString 메서드를 자동으로 생성해준다.
@@ -41,43 +40,5 @@ public class ProductDto {
                 .productPrice(productPrice)
                 .productStock(productStock)
                 .build();
-
     }
-
-    // Getter and Setter for productId
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    // Getter and Setter for productName
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    // Getter and Setter for productPrice
-    public int getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(int productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    // Getter and Setter for productStock
-    public int getProductStock() {
-        return productStock;
-    }
-
-    public void setProductStock(int productStock) {
-        this.productStock = productStock;
-    }
-
 }
