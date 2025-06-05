@@ -66,7 +66,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity, String> 
 
     List<ProductEntity> findByProductPriceGreaterThan(Integer price, Pageable pageable);
 
-     List<ProductEntity> findByProductPriceWithParameterPaging(Integer price, Pageable pageable);
+   
 
    
     
