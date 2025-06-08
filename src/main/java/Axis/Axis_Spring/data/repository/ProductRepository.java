@@ -52,42 +52,39 @@ public interface ProductRepository extends JpaRepository<ProductEntity, String> 
 
     List<ProductEntity> findByProductPriceGreaterThan(Integer price);
 
-    List<ProductEntity> findByProductNameContaining(String productName);
+    List<ProductEntity> findByProductNameContaining(String productName);  //상품 이름에 특정 문자열이 포함된 상품을 찾는다.
 
     // 정렬과 페이징
-    List<ProductEntity> findByProductNameContainingOrderByProductStockAsc(String productName);
-
-    List<ProductEntity> findByProductNameContainingOrderByProductStockDesc(String productName);
+    List<ProductEntity> findByProductNameContainingOrderByProductStockAsc(String productName);  //오름차순
+    List<ProductEntity> findByProductNameContainingOrderByProductStockDesc(String productName);  //내림차순
 
     List<ProductEntity> findByProductNameContainingOrderByProductPriceAscProductStockDesc(String productName);
     
- 
-    List<ProductEntity> findByProductNameContaining(String productName, Sort sort);
+    List<ProductEntity> findByProductNameContaining(String productName, Sort sort); //Sort를 이용한 정렬
 
-    List<ProductEntity> findByProductPriceGreaterThan(Integer price, Pageable pageable);
-
-   
-
-   
+    List<ProductEntity> findByProductPriceGreaterThan(Integer price, Pageable pageable);  //페이징 처리
     
-    
-
-    // @Query 예제 - JPQL (엔티티명과 필드명 정확히 맞춤)
+     
+//비교적 복잡한 쿼리의 경우 @Query 어노테이션을 사용하여 직접 작성할 수 있다.
+// @Query 예제 - JPQL (엔티티명과 필드명 정확히 맞춤)
     @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > 2000")
     List<ProductEntity> findByPriceBasis();
 
     // @Query 예제 - 네이티브 쿼리
-    @Query(value = "SELECT * FROM product p WHERE p.price > 2000", nativeQuery = true)
+    @Query(value = "SELECT * FROM product p WHERE p.price > 2000", nativeQuery = true)  //nativeQuery =true를 사용하면 스프링과 관련없는 일반 SQL 쿼리를 사용할 때 작성
     List<ProductEntity> findByPriceBasisNativeQuery();
 
-    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > ?1")
+    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > ?1")  // ?는 파라미터를 의미, ?1은 첫 번째 파라미터를 의미한다.
     List<ProductEntity> findByPriceWithParameter(Integer price);
 
-    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > :price")
-    List<ProductEntity> findByPriceWithParameterNaming(@Param("price") Integer price);
+    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > :price")  // :price 는 파라미터에 이름을 부여하는 방식이다.
+    List<ProductEntity> findByPriceWithParameterNaming( Integer price);    // 메서드 파라미터 이름과 JPQL 쿼리에서 사용하는 이름이 동일하면 @Param 없이도 자동 매핑된다.
 
-    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > :pri")
-    List<ProductEntity> findByPriceWithParameterNaming2(@Param("pri") Integer price);
+    @Query("SELECT p FROM ProductEntity p WHERE p.productPrice > :pri")  // 위 쿼리와 의미는 동일하지만, 쿼리에서 사용하는 파라미터 이름(:pri)과 메서드 파라미터 이름(price)이 다르므로
+    List<ProductEntity> findByPriceWithParameterNaming2(@Param("pri") Integer price); //"price라는 자바 변수에게 pri라는 JPQL 별명을 붙여준 것
+
+    @Query(value = "SELECT * FROM product WHERE product_price > :product_price", countQuery = "SELECT count(*) FROM product WHERE product_price > ?1", nativeQuery = true)
+    List<ProductEntity> findByPriceWithParameterPaging(Integer product_price, Pageable pageable);
 
 }
 

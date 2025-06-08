@@ -216,15 +216,17 @@ class ProductRepositoryTest {
     for (ProductEntity productEntity : foundAll) {
       System.out.println(productEntity.toString());
     }
-  System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
-     System.out.println("상품 이름에 '상품'이 포함된 상품을 재고 오름차순으로 정렬**************************");
-    List<ProductEntity> foundProductEntitys = productRepository.findByProductNameContainingOrderByProductStockAsc("상품");
-    for (ProductEntity productEntity : foundProductEntitys) {
+    System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
+
+    System.out.println("상품 이름에 '상품'이 포함된 상품을 재고 오름차순으로 정렬**************************");
+
+    List<ProductEntity> foundProductEntities = productRepository.findByProductNameContainingOrderByProductStockAsc("상품");
+    for (ProductEntity productEntity : foundProductEntities) {
       System.out.println(productEntity);
     }
     System.out.println("상품 이름에 '상품'이 포함된 상품을 재고 내림차순으로 정렬=============================");
-    foundProductEntitys = productRepository.findByProductNameContainingOrderByProductStockDesc("상품");
-    for (ProductEntity productEntity : foundProductEntitys) {
+     foundProductEntities = productRepository.findByProductNameContainingOrderByProductStockDesc("상품");
+    for (ProductEntity productEntity : foundProductEntities) {
       System.out.println(productEntity);
     }
   }
@@ -236,11 +238,11 @@ class ProductRepositoryTest {
     for (ProductEntity productEntity : foundAll) {
       System.out.println(productEntity.toString());
     }
-   System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
+    System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
 
-     System.out.println("상품 이름에 '상품'이 포함된 상품을 가격 오름차순, 재고 내림차순으로 정렬**************************");
+    System.out.println("상품 이름에 '상품'이 포함된 상품을 가격 오름차순, 재고 내림차순으로 정렬**************************");
     List<ProductEntity> foundProductEntitys =
-        productRepository.findByProductNameContainingOrderByProductPriceAscProductStockDesc("상품");
+        productRepository.findByProductNameContainingOrderByProductPriceAscProductStockDesc("상품");  // 가격 오름차순을 우선하고  재고 내림차순
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
     }
@@ -255,12 +257,14 @@ class ProductRepositoryTest {
    }
    System.out.println("====↑↑ Test Data ↑↑====");
 
-   List<ProductEntity> foundProductEntitys = productRepository.findByProductNameContaining("상품", Sort.by(Order.asc("productPrice")));
+    System.out.println("상품 이름에 '상품'이 포함된 상품을 가격 오름차순으로 정렬**************************");
+    List<ProductEntity> foundProductEntitys = productRepository.findByProductNameContaining("상품", Sort.by(Order.asc("productPrice")));
    for (ProductEntity productEntity : foundProductEntitys) {
      System.out.println(productEntity);
    }
 
-   foundProductEntitys =  productRepository.findByProductNameContaining("상품", Sort.by(Order.asc("productPrice"), Order.asc("productStock")));
+    System.out.println("상품 이름에 '상품'이 포함된 상품을 가격 오름차순, 재고 내림차순으로 정렬**************************");  
+    foundProductEntitys =  productRepository.findByProductNameContaining("상품", Sort.by(Order.asc("productPrice"), Order.asc("productStock")));
    for (ProductEntity productEntity : foundProductEntitys) {
      System.out.println(productEntity);
    }
@@ -275,11 +279,13 @@ class ProductRepositoryTest {
    }
    System.out.println("====↑↑ Test Data ↑↑====");
 
+    System.out.println("상품 이름에 '상품'이 포함된 상품을 가격이 200원 이상인 상품을 페이징 처리");
    List<ProductEntity> foundProductEntitys = productRepository.findByProductPriceGreaterThan(200, PageRequest.of(0, 2));
    for (ProductEntity productEntity : foundProductEntitys) {
      System.out.println(productEntity);
    }
 
+   System.out.println("상품 이름에 '상품'이 포함된 상품을 가격이 200원 이상인 상품을 페이징 처리, 페이지 1");
    foundProductEntitys = productRepository.findByProductPriceGreaterThan(200, PageRequest.of(4, 2));
    for (ProductEntity productEntity : foundProductEntitys) {
      System.out.println(productEntity);
@@ -295,6 +301,7 @@ class ProductRepositoryTest {
     }
     System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
 
+    System.out.println("상품 가격이 2000원 이상인 상품을 조회");   //ProudctRepository에서 findByPriceBasis()메서드에 2000원 이상인 상품을 조회하는 JPQL 쿼리를 작성했다.
     List<ProductEntity> foundProductEntitys = productRepository.findByPriceBasis();
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
@@ -308,8 +315,9 @@ class ProductRepositoryTest {
     for (ProductEntity productEntity : foundAll) {
       System.out.println(productEntity.toString());
     }
-  System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
-
+    System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
+ 
+    System.out.println("상품 가격이 2000원 이상인 상품을 조회");   //ProudctRepository에서 findByPriceBasisNativeQuery()메서드에 2000원 이상인 상품을 조회하는 네이티브 쿼리를 작성했다.
     List<ProductEntity> foundProductEntitys = productRepository.findByPriceBasisNativeQuery();
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
@@ -325,7 +333,8 @@ class ProductRepositoryTest {
     }
   System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
 
-    List<ProductEntity> foundProductEntitys = productRepository.findByPriceWithParameter(2000);
+    System.out.println("상품 가격이 5000원 이상인 상품을 조회****************");  //ProudctRepository에서 findByPriceWithParameter()메서드에 5000원 이상인 상품을 조회하는 JPQL 쿼리를 작성했다.
+    List<ProductEntity> foundProductEntitys = productRepository.findByPriceWithParameter(5000);
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
     }
@@ -340,6 +349,7 @@ class ProductRepositoryTest {
     }
   System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
 
+    System.out.println("상품 가격이 2000원 이상인 상품을 조회****************");  //ProudctRepository에서 findByPriceWithParameterNaming()메서드에 2000원 이상인 상품을 조회하는 JPQL 쿼리를 작성했다.
     List<ProductEntity> foundProductEntitys = productRepository.findByPriceWithParameterNaming(2000);
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
@@ -355,6 +365,7 @@ class ProductRepositoryTest {
     }
    System.out.println("**********↑↑ 생성된 임시데이터 ↑↑**********");
 
+    System.out.println("상품 가격이 2000원 이상인 상품을 조회****************");  //ProudctRepository에서 findByPriceWithParameterNaming2()메서드에 2000원 이상인 상품을 조회하는 JPQL 쿼리를 작성했다.
     List<ProductEntity> foundProductEntitys = productRepository.findByPriceWithParameterNaming2(2000);
     for (ProductEntity productEntity : foundProductEntitys) {
       System.out.println(productEntity);
@@ -370,7 +381,8 @@ class ProductRepositoryTest {
    }
    System.out.println("====↑↑ Test Data ↑↑====");
 
-   List<ProductEntity> foundProductEntitys =  productRepository.findByProductPriceWithParameterPaging(2000, PageRequest.of(2, 2));
+   List<ProductEntity> foundProductEntitys =  productRepository.findByPriceWithParameterPaging(2000, PageRequest.of(2, 2));
+     // PageRequest.of(2, 2))  -->1번째 인자:가져올 페이지 번호 (0부터 시작), 2번째 인자:한 페이지에 가져올 데이터의 개수
    for (ProductEntity productEntity : foundProductEntitys) {
      System.out.println(productEntity);
    }
