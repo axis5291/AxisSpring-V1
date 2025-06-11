@@ -18,7 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@ToString  //ToString을 사용하면 객체의 필드 값을 문자열로 출력할 수 있다.
 @Table(name="product")  //ProductEntity를 기반으로 디비에 테이블을 자동으로 생성해주는 옵션
 public class ProductEntity extends BaseEntity {
 
